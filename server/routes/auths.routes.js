@@ -92,6 +92,7 @@ router.post('/login', (req, res, next) => {
             // Create a token payload
             const { _id, email, name } = foundUser;
             const payload = { _id, email, name };
+            console.log(payload)
 
             // Sign the token
             const authToken = jwt.sign(

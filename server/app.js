@@ -39,76 +39,7 @@ app.get('/docs', (req, res) => {
 
 app.use('/api', require('./routes/auths.routes.js'));
 app.use('/api', require('./routes/students.routes.js'));
-
-
-
-// Cohort Routes
-
-// Get all cohorts
-app.get('/api/cohorts', (req, res, next) => {
-  Cohorts.find()
-    .then(allCohorts => {
-      res.status(200).json(allCohorts);
-    })
-    .catch(error => { 
-      next(error)
-    });
-});
-
-// Get a single cohort by ID
-app.get('/api/cohorts/:id', (req, res, next) => {
-  Cohorts.findById(req.params.id)
-    .then(cohort => {
-      res.status(200).json(cohort);
-    })
-    .catch(error => { 
-      next(error)
-    });
-});
-
-// Create a new cohort
-app.post('/api/cohorts', (req, res, next) => {
-  Cohorts.create({
-    inProgress: req.body.inProgress,
-    cohortSlug: req.body.cohortSlug,
-    cohortName: req.body.cohortName,
-    program: req.body.program,
-    campus: req.body.campus,
-    startDate: req.body.startDate,
-    endDate: req.body.endDate,
-    programManager: req.body.programManager,
-    leadTeacher: req.body.leadTeacher,
-    totalHours: req.body.totalHours
-  })
-    .then(newCohort => {
-      res.status(201).json(newCohort);
-    })
-    .catch(error => { 
-      next(error)
-    });
-});
-
-// Update a cohort
-app.put('/api/cohorts/:id', (req, res, next) => {
-  Cohorts.findByIdAndUpdate(req.params.id, req.body, { new: true })
-    .then(updatedCohort => {
-      res.status(200).json(updatedCohort);
-    })
-    .catch(error => {
-      next(error)
-    });
-});
-
-// Delete a cohort
-app.delete("/api/cohorts/:id", (req, res, next) => {
-  Cohorts.findByIdAndDelete(req.params.id)
-    .then(() => {
-      res.status(204).send();
-    })
-    .catch(error => { 
-      next(error)
-    });
-});
+app.use('/api', require('./routes/cohorts.routes.js'));
 
 
 

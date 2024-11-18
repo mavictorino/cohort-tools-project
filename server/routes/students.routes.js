@@ -3,9 +3,11 @@ const express = require('express');
 const router = express.Router();
 const Students = require('../models/Students.model')
 const Cohort = require('../models/Cohorts.model')
+const { isAuthenticated } = require('../middleware/jwt.middleware');
+
 
 // Get all students with populated cohort data
-router.get('/api/students', (req, res, next) => {
+router.get('/students', isAuthenticated, (req, res, next) => {
     Students.find()
         .populate('cohort')
         .then(allStudents => {
@@ -17,7 +19,7 @@ router.get('/api/students', (req, res, next) => {
 });
 
 // Get students by cohort ID with populated cohort data
-router.get('/api/students/cohort/:cohortId', (req, res, next) => {
+router.get('/students/cohort/:cohortId', isAuthenticated, (req, res, next) => {
     Students.find({ cohort: req.params.cohortId })
         .populate('cohort')
         .then(studentsByCohort => res.status(200).json(studentsByCohort))
@@ -27,7 +29,7 @@ router.get('/api/students/cohort/:cohortId', (req, res, next) => {
 });
 
 // Get a single student by ID with populated cohort data
-router.get("/api/students/:id", (req, res, next) => {
+router.get("/students/:id", isAuthenticated, (req, res, next) => {
     Students.findById(req.params.id)
         .populate('cohort')
         .then(student => {
@@ -39,7 +41,7 @@ router.get("/api/students/:id", (req, res, next) => {
 });
 
 // Create a new student
-router.post('/api/students', (req, res, next) => {
+router.post('/students', isAuthenticated, (req, res, next) => {
     Students.create({
         firstName: req.body.firstName,
         lastName: req.body.lastName,
@@ -62,7 +64,7 @@ router.post('/api/students', (req, res, next) => {
 });
 
 // Update a student
-router.put('/api/students/:id', (req, res, next) => {
+router.put('/students/:id', isAuthenticated, (req, res, next) => {
     Students.findByIdAndUpdate(req.params.id, req.body, { new: true })
         .then(updatedStudent => {
             res.status(200).json(updatedStudent);
@@ -73,7 +75,7 @@ router.put('/api/students/:id', (req, res, next) => {
 });
 
 // Delete a student
-router.delete("/api/students/:id", (req, res, next) => {
+router.delete("/students/:id", isAuthenticated, (req, res, next) => {
     Students.findByIdAndDelete(req.params.id)
         .then(() => {
             res.status(204).send();
